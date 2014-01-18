@@ -1,0 +1,23 @@
+CREATE TABLE IF NOT EXISTS `phpvms_efassflightdata` (
+  `id_rec` int(11) NOT NULL AUTO_INCREMENT,
+  `idefassflight` varchar(50) COLLATE cp1250_czech_cs NOT NULL,
+  `time` time NOT NULL,
+  `lat` varchar(15) COLLATE cp1250_czech_cs NOT NULL,
+  `lon` varchar(15) COLLATE cp1250_czech_cs NOT NULL,
+  `alt` varchar(6) COLLATE cp1250_czech_cs NOT NULL,
+  `ias` int(11) NOT NULL,
+  `gs` int(11) NOT NULL,
+  `vs` varchar(8) COLLATE cp1250_czech_cs NOT NULL,
+  `galt` varchar(6) COLLATE cp1250_czech_cs NOT NULL,
+  `hdg` smallint(6) NOT NULL,
+  `qnh` smallint(4) NOT NULL,
+  `sq` smallint(4) NOT NULL,
+  `stage` varchar(255) COLLATE cp1250_czech_cs NOT NULL,
+  `l_ldg` tinyint(1) NOT NULL,
+  `l_str` tinyint(1) NOT NULL,
+  `l_bea` tinyint(1) NOT NULL,
+  `l_nav` tinyint(1) NOT NULL,
+  `l_gnd` tinyint(1) NOT NULL,
+  `l_log` tinyint(1) NOT NULL,
+  PRIMARY KEY (`id_rec`)
+) ENGINE=MyISAM  DEFAULT CHARSET=cp1250 COLLATE=cp1250_czech_cs AUTO_INCREMENT=178 ;
