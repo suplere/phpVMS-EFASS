@@ -111,11 +111,12 @@ while ($line = fscanf($handle, "%s %s %s %s %s %s %s\n"))  {
 	
 	$title = mysql_escape_string($title);
 
-	if($type == 'F' || $type == 'B') {
-		$type = NAV_FIX;
-	} else {
-		$type = NAV_VOR;
-	}
+	//if($type == 'F' || $type == 'B') {
+	//	$type = NAV_FIX;
+	//} else {
+	//	$type = NAV_VOR;
+	//}
+	$type = NAV_FIX;
 	
 	$loc = get_earth_location($lat, $lng);
 	
@@ -144,7 +145,7 @@ mysql_query($sql.$values);
 fclose($handle);
 
 echo "{$total} airway segments loaded... \n";
-echo "Loading VORs...";
+echo "Loading VORs NDBs...";
 
 $total = 0;
 $updated = 0;
@@ -157,12 +158,12 @@ $chunks = 3000;
 $sql = "INSERT INTO phpvms_navdata (name, title, airway, seq, loc, lat, lng, freq, type) VALUES ";
 
 $handle = fopen("fsbuild/navs.txt", "r");
-while ($lineinfo = fscanf($handle, "%s %s %s %s %s %s\n"))  {
+while ($lineinfo = fscanf($handle, "%s %s %s %s %s %s %s\n"))  {
 	if($lineinfo[0][0] == ';') {
 		continue;
 	}
 	
-	list ($name, $title, $lat, $lng, $type, $freq) = $lineinfo;
+	list ($name, $title, $lat, $lng, $type, $freq, $state) = $lineinfo;
 
 	$lat = get_coordinates($lat);
 	$lng = get_coordinates($lng);
@@ -172,8 +173,14 @@ while ($lineinfo = fscanf($handle, "%s %s %s %s %s %s\n"))  {
 	$title = ucwords($title);
 	$title = mysql_escape_string($title);
 	
+	if ($type == 'VOR') { 
 	$type = NAV_VOR;
+	}
 	
+	if ($type == 'NDB') { 
+	$type = NAV_NDB;
+	}	
+		
 	$res = mysql_query("SELECT id FROM phpvms_navdata WHERE `name`='{$name}'");
 	if(mysql_num_rows($res) > 0) {
 		
@@ -185,7 +192,7 @@ while ($lineinfo = fscanf($handle, "%s %s %s %s %s %s\n"))  {
 		
 		// Just do an update on the spot
 		$update_sql="UPDATE phpvms_navdata
-					 SET `title` = '{$title}', `freq` = '{$freq}'
+					 SET `title` = '{$title}', `freq` = '{$freq}', `type`={$type}
 					 WHERE `name` = '{$name}'";
 		
 		mysql_query($update_sql);
@@ -224,6 +231,7 @@ fclose($handle);
 echo "{$total} VORs added, {$updated} updated\n";
 echo "Loading NDBs...";
 
+/*
 // Add NDBs
 
 $total = 0;
@@ -297,7 +305,7 @@ fclose($handle);
 
 echo "{$total} NDBs added, {$updated} updated\n";
 
-
+*/
 // Load intersections
 echo "Loading INTs...";
 
@@ -347,7 +355,7 @@ while ($lineinfo = fscanf($handle, "%s %s %s %s %s\n"))
 		
 		// Just do an update on the spot
 		$update_sql="UPDATE phpvms_navdata
-					 SET `title` = '{$title}'
+					 SET `title` = '{$title}', `type`={$type}
 					 WHERE `name` = '{$name}'";
 		
 		mysql_query($update_sql);

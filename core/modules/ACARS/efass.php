@@ -17,9 +17,9 @@
 error_reporting(E_ALL ^ E_NOTICE);
 ini_set('display_errors', 'on');
 	
-Debug::log($_SERVER['QUERY_STRING'], 'efass');
-Debug::log($_SERVER['REQUEST_URI'], 'efass');
-Debug::log(print_r($_REQUEST), 'efass');
+//Debug::log($_SERVER['QUERY_STRING'], 'efass');
+//Debug::log($_SERVER['REQUEST_URI'], 'efass');
+//Debug::log(print_r($_REQUEST), 'efass');
 
 class Coords {
 	public $lat;

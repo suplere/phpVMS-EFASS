@@ -193,6 +193,34 @@ class EFASSData extends CodonData
 				
 		return $ret;
 	}
-		
-		
+	public static function getFlightData($pirepid)
+	{	
+		$sql = 'SELECT id_rec AS id,time,lat,lon,alt,ias,gs,vs,galt,hdg,qnh,sq,stage,l_ldg,l_str,l_bea,l_nav,l_gnd,l_log 
+			FROM '.TABLE_PREFIX.'efassflightdata fd JOIN '.TABLE_PREFIX.'pirepvalues pv ON fd.idefassflight=pv.value 
+				AND pv.pirepid='.intval($pirepid).' ORDER BY time asc';
+
+		return DB::get_results($sql);	
+	}	
+
+	public static function getAltitudeprofile($pirepid)
+	{
+		$format = '%T';
+		$sql = "SELECT ' ' AS ym,galt AS total 
+			FROM ".TABLE_PREFIX."efassflightdata fd JOIN ".TABLE_PREFIX."pirepvalues pv ON fd.idefassflight=pv.value 
+				AND pv.pirepid=".intval($pirepid)." ORDER BY time asc";
+		$result = DB::get_results($sql);
+		return $result;	
+	
+	}
+	
+	public static function getSpeedprofile($pirepid)
+	{
+		$format = '%T';
+		$sql = "SELECT ' ' AS ym,gs AS total 
+			FROM ".TABLE_PREFIX."efassflightdata fd JOIN ".TABLE_PREFIX."pirepvalues pv ON fd.idefassflight=pv.value 
+				AND pv.pirepid=".intval($pirepid)." ORDER BY time asc";
+		$result = DB::get_results($sql);
+		return $result;	
+	
+	}	
 }
