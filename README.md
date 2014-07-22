@@ -9,7 +9,7 @@ ACARS position and other data will be saved to the table ``phpvms_efassflightdat
 
 Copyright (c) 2014, [Evžen Šupler](https://github.com/suplere/).
 
-This extension is licensed under the [Creative Commons Attribution Non-commercial Share Alike (by-nc-sa)](http://creativecommons.org/licenses/by-nc-sa/3.0/) license.
+Licensed under the [Creative Commons Attribution Non-commercial Share Alike (by-nc-sa)](http://creativecommons.org/licenses/by-nc-sa/3.0/) license.
 
 Includes NavData parser code from [Nabeel Shahzad](https://github.com/nshahzad/phpvms_navdata).
 
@@ -26,7 +26,7 @@ With contributions from [Pierre Lavaux](https://github.com/PierreLvx) (pierre@zo
 
 ##Client Setup
 
-* In ``http://froom.de/efass/?a=accountstatus`` to the field ACARS-Ping URL: insert this ``http://your-phpvms-server/action.php/acars/efass/efass``.
+* Go to ``http://froom.de/efass/?a=accountstatus``. In the field ACARS-Ping URL, insert this ``http://your-phpvms-server/action.php/acars/efass/efass``.
 
 * PIREP forwarding is not automatic. After taxi to the gate/parking, you must manually send your PIREP from EFASS. Save PIREP by clicking on the PIREP in EFASS (only during TAXI IN or the DEBOARDING flight stage).
 
