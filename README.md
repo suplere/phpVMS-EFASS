@@ -1,12 +1,10 @@
 #phpVMS-EFASS
-===
 
 **This extension will make it possible to track and log flights in phpVMS through EFASS, via the ACARS protocol.**
 
 ACARS position and other data will be saved to the table ``phpvms_efassflightdata``. It may be joined to the ``phpvms_pireps`` table by ``idefassflight``, and an additional PIREP field, ``EFASS_UNIQUEFLIGHTID``.
 
-###Credits
----
+##Credits
 
 
 Copyright (c) 2014, [Evžen Šupler](https://github.com/suplere/).
@@ -17,8 +15,7 @@ Includes NavData parser code from [Nabeel Shahzad](https://github.com/nshahzad/p
 
 With contributions from [Pierre Lavaux](https://github.com/PierreLvx) (pierre@zonexecutive.com).
 
-###Server Setup
----
+##Server Setup
 
 
 1. Import the included ``EfassFlightData.sql`` to have the proper table structure created for you. If you are not using the default ``phpvms_`` prefix for your tables, edit accordingly ;
@@ -27,15 +24,13 @@ With contributions from [Pierre Lavaux](https://github.com/PierreLvx) (pierre@zo
 
 3. Extract core folder to core folder in phpVMS on the server. PIREPData.class.php will be overwrite, you may backup your original file.
 
-###Client Setup
----
+##Client Setup
 
 * In ``http://froom.de/efass/?a=accountstatus`` to the field ACARS-Ping URL: insert this ``http://your-phpvms-server/action.php/acars/efass/efass``.
 
 * PIREP forwarding is not automatic. After taxi to the gate/parking, you must manually send your PIREP from EFASS. Save PIREP by clicking on the PIREP in EFASS (only during TAXI IN or the DEBOARDING flight stage).
 
-###NavData
----
+##NavData
 
 We recommend that you use up-to-date navdata with phpVMS. A parser is included within this download, that will convert FSBuild 2.x FMS data from Navigraph.
 
