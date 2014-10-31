@@ -21,7 +21,7 @@ class PIREPS extends CodonModule
 	public $pirep;
 	public $pirepdata;
 	
-	public function __call($name, $args)
+	public function __call($name)
 	{
 		if($name == 'new')
 		{
@@ -84,7 +84,7 @@ class PIREPS extends CodonModule
 			
 			if($this->post->action == 'addcomment')
 			{
-				$ret = PIREPData::addComment($this->post->pirepid, Auth::$userinfo->pilotid, $this->post->comment);
+				PIREPData::addComment($this->post->pirepid, Auth::$userinfo->pilotid, $this->post->comment);
 				
 				$this->set('message', 'Comment added!');
 				$this->render('core_success.tpl');
@@ -93,7 +93,7 @@ class PIREPS extends CodonModule
 			/* Edit the PIREP custom fields */
 			elseif($this->post->action == 'editpirep')
 			{
-				$ret = PIREPData::saveFields($this->post->pirepid, $_POST);
+				PIREPData::saveFields($this->post->pirepid, $_POST);
 				
 				$this->set('message', 'PIREP edited!');
 				$this->render('core_success.tpl');

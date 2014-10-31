@@ -108,7 +108,7 @@ class PIREPData extends CodonData
 		
 		foreach($data as $month)
 		{
-			$month = FinanceData::calculateFinances($month);
+			FinanceData::calculateFinances($month);
 		}
 		
 		return $data;
@@ -483,7 +483,7 @@ class PIREPData extends CodonData
 		$sql = 'UPDATE '.TABLE_PREFIX.'pireps
 				SET `exported`='.$status;
 		
-		$res = DB::query($sql);
+		DB::query($sql);
 		
 		if(DB::errno() != 0)
 		{
@@ -521,7 +521,7 @@ class PIREPData extends CodonData
 	public static function deleteComment($comment_id)
 	{
 		$sql = 'DELETE FROM '.TABLE_PREFIX.'pirepcomments WHERE `id`='.$comment_id;
-		$res = DB::query($sql);
+		DB::query($sql);
 		
 		if(DB::errno() != 0)
 		{
@@ -789,7 +789,7 @@ class PIREPData extends CodonData
 							{$pirepdata['exported']},
 							'{$pirepdata['rawdata']}')";
 
-		$ret = DB::query($sql);
+		DB::query($sql);
 		$pirepid = DB::$insert_id;
 		//EFASS FlightID
 		if(isset($pirepdata['efass_uniqueflightid']))
@@ -883,7 +883,7 @@ class PIREPData extends CodonData
 			return false;
 		}
 		
-		$pirepinfo = self::getReportDetails($pirepid);
+		self::getReportDetails($pirepid);
 		
 		$pirepdata['fuelprice'] = $pirepdata['fuelused'] * $pirepdata['fuelunitcost'];
 		
@@ -956,7 +956,7 @@ class PIREPData extends CodonData
 		$sql .= DB::build_update($fields);
 		$sql .= ' WHERE `pirepid`='.$pirepid;
 		
-		$res = DB::query($sql);
+		DB::query($sql);
 		
 		if(DB::errno() != 0)
 		{
@@ -1229,7 +1229,7 @@ class PIREPData extends CodonData
 					SET `log` = CONCAT(`log`, \''.$log.'\')
 					WHERE `pirepid`='.$pirepid;
 					
-		$res = DB::query($sql);
+		DB::query($sql);
 		
 		if(DB::errno() != 0)
 			return false;
@@ -1269,7 +1269,7 @@ class PIREPData extends CodonData
 		$sql = "INSERT INTO ".TABLE_PREFIX."pirepcomments (`pirepid`, `pilotid`, `comment`, `postdate`)
 					VALUES ($pirepid, $pilotid, '$comment', NOW())";
 
-		$res = DB::query($sql);
+		DB::query($sql);
 		
 		if(DB::errno() != 0)
 			return false;
@@ -1327,7 +1327,7 @@ class PIREPData extends CodonData
 		$sql = "INSERT INTO " . TABLE_PREFIX ."pirepfields (title, name, type, options)
 					VALUES ('$title', '$fieldname', '$type', '$values')";
 	
-		$res = DB::query($sql);
+		DB::query($sql);
 		
 		if(DB::errno() != 0)
 			return false;
@@ -1346,7 +1346,7 @@ class PIREPData extends CodonData
 					SET title='$title',name='$fieldname', type='$type', options='$values'
 					WHERE fieldid=$id";
 				
-		$res = DB::query($sql);
+		DB::query($sql);
 		
 		if(DB::errno() != 0)
 			return false;
@@ -1400,7 +1400,7 @@ class PIREPData extends CodonData
 	{
 		$sql = 'DELETE FROM '.TABLE_PREFIX.'pirepfields WHERE fieldid='.$id;
 
-		$res = DB::query($sql);
+		DB::query($sql);
 		
 		if(DB::errno() != 0)
 			return false;
@@ -1421,7 +1421,6 @@ class PIREPData extends CodonData
 	public static function ShowReportCounts($ret=false)
 	{
 		// Recent PIREP #'s
-		$max = 0;
 		$data = array();
 		
 		# Get the past 7 days
