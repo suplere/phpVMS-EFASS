@@ -15,39 +15,39 @@
  * @link http://www.phpvms.net
  * @license http://creativecommons.org/licenses/by-nc-sa/3.0/
  */
- 
+
 class Pilots extends CodonModule
 {
-	
+
 	public function index()
 	{
 		// Get all of our hubs, and list pilots by hub
 		$allhubs = OperationsData::GetAllHubs();
-		
+
 		if(!$allhubs) $allhubs = array();
-		
+
 		foreach($allhubs as $hub)
 		{
 			$this->set('title', $hub->name);
 			$this->set('icao', $hub->icao);
-			
+
 			$this->set('allpilots', PilotData::findPilots(array('p.hub'=>$hub->icao)));
-								
+
 			$this->render('pilots_list.tpl');
 		}
-		
+
 		$nohub = PilotData::findPilots(array('p.hub'=>''));
 		if(!$nohub)
 		{
 			return;
 		}
-		
+
 		$this->set('title', 'No Hub');
 		$this->set('icao', '');
 		$this->set('allpilots', $nohub);
 		$this->render('pilots_list.tpl');
 	}
-	
+
 	public function reports($pilotid='')
 	{
 		if($pilotid == '')
@@ -56,70 +56,69 @@ class Pilots extends CodonModule
 			$this->render('core_error.tpl');
 			return;
 		}
-		
+
 		$this->set('pireps', PIREPData::GetAllReportsForPilot($pilotid));
 		$this->render('pireps_viewall.tpl');
 	}
-	
-	
+
 	/* Stats stuff for charts */
-	
+
 	public function altgraph($pirepid)
 	{
 		$data = EFASSData::getAltitudeprofile($pirepid);
 		$this->create_line_graph('Altitude profile', $data);
 		//$data = PIREPData::getIntervalDataByDays(array('p.pilotid'=>$pirepid), 30);
 		//$this->create_line_graph('Past 30 days PIREPs', $data);
-	}	
+	}
 
 	public function statsdaysdata($pilotid)
 	{
 		$data = PIREPData::getIntervalDataByDays(array('p.pilotid'=>$pilotid), 30);
 		$this->create_line_graph('Past 30 days PIREPs', $data);
 	}
-	
+
 	public function statsmonthsdata($pilotid)
 	{
 		$data = PIREPData::getIntervalDataByMonth(array('p.pilotid'=>$pilotid), 3);
 		$this->create_line_graph('Monthly Flight Stats', $data);
 	}
-	
+
 	public function statsaircraftdata($pilotid)
 	{
 		$data = StatsData::PilotAircraftFlownCounts($pilotid);
 		if(!$data) $data = array();
-		
+
 		include CORE_LIB_PATH.'/php-ofc-library/open-flash-chart.php';
-		
+
 		$d = array();
 		foreach($data as $ac)
 		{
 			OFCharts::add_data_set($ac->aircraft, floatval($ac->hours));
 		}
-		
+
 		echo OFCharts::create_pie_graph('Aircraft Flown');
 	}
-	
+
 	protected function create_line_graph($title, $data)
-	{	
+	{
 		if(!$data)
 		{
 			$data = array();
 		}
-				
+
 		$bar_values = array();
 		$bar_titles = array();
 		foreach($data as $val)
 		{
-			
+
 			$bar_titles[] = $val->ym;
 			$bar_values[] = round(floatval($val->total));
 		}
-	
+
 		OFCharts::add_data_set($bar_titles, $bar_values);
 		echo OFCharts::create_area_graph($title);
 	}
-		
+
 	public function RecentFrontPage($count = 5)
 	{
 		$this->set('pilots', PilotData::GetLatestPilots($count));

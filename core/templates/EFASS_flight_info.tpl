@@ -7,7 +7,6 @@
 $chart_width = '800';
 $chart_height = '250';
 
-
 /* Don't need to change anything below this here ///efass/altgraph/7.$pirep->pirepid*/
 ?>
 <div align="center" style="width: 100%;">
@@ -16,12 +15,11 @@ $chart_height = '250';
 
 <script type="text/javascript" src="<?php echo fileurl('/lib/js/ofc/js/swfobject.js')?>"></script>
 <script type="text/javascript">
-swfobject.embedSWF("<?php echo fileurl('/lib/js/ofc/open-flash-chart.swf');?>", 
-	"altitude_chart", "<?php echo $chart_width;?>", "<?php echo $chart_height;?>", 
-	"9.0.0", "expressInstall.swf", 
-	{"data-file":"<?php echo actionurl('/efass/altgraph/'.$pirep->pirepid);?>"}); 
+swfobject.embedSWF("<?php echo fileurl('/lib/js/ofc/open-flash-chart.swf');?>",
+	"altitude_chart", "<?php echo $chart_width;?>", "<?php echo $chart_height;?>",
+	"9.0.0", "expressInstall.swf",
+	{"data-file":"<?php echo actionurl('/efass/altgraph/'.$pirep->pirepid);?>"});
 </script>
-
 
 <div align="center" style="width: 100%;">
 <div align="center" id="speed_chart"></div>
@@ -29,13 +27,11 @@ swfobject.embedSWF("<?php echo fileurl('/lib/js/ofc/open-flash-chart.swf');?>",
 
 <script type="text/javascript" src="<?php echo fileurl('/lib/js/ofc/js/swfobject.js')?>"></script>
 <script type="text/javascript">
-swfobject.embedSWF("<?php echo fileurl('/lib/js/ofc/open-flash-chart.swf');?>", 
-	"speed_chart", "<?php echo $chart_width;?>", "<?php echo $chart_height;?>", 
-	"9.0.0", "expressInstall.swf", 
-	{"data-file":"<?php echo actionurl('/efass/speedgraph/'.$pirep->pirepid);?>"}); 
+swfobject.embedSWF("<?php echo fileurl('/lib/js/ofc/open-flash-chart.swf');?>",
+	"speed_chart", "<?php echo $chart_width;?>", "<?php echo $chart_height;?>",
+	"9.0.0", "expressInstall.swf",
+	{"data-file":"<?php echo actionurl('/efass/speedgraph/'.$pirep->pirepid);?>"});
 </script>
-
-
 
 <h3>EFASS Flight data records <?php echo $pirep->code . $pirep->flightnum; ?> <?php echo date(DATE_FORMAT, $pirep->submitdate); ?></h3>
 

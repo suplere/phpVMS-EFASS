@@ -1,42 +1,40 @@
 <h3>Route Map</h3>
 
-
-
 <div class="mapcenter" align="center">
 	<div id="routemap" style="width:<?php echo  Config::Get('MAP_WIDTH');?>; height: <?php echo Config::Get('MAP_HEIGHT')?>"></div>
 </div>
 <?php
 /**
- * 
+ *
  * This is the new Google Maps v3 code. Be careful of changing
  * things here, only do something if you know what you're doing.
- * 	          
+ *
  * These are some options for the map, you can change here.
- * 
+ *
  * This map is used for schedules and PIREPS
- * 
- * By default, the zoom level and center are ignored, and the map 
+ *
+ * By default, the zoom level and center are ignored, and the map
  * will try to fit the all the flights in. If you want to manually set
  * the zoom level and center, set "autozoom" to false.
- * 
+ *
  * If you want to adjust the size of the map - Look at the above
- * "routemap" div with the CSS width/height parameters. You can 
+ * "routemap" div with the CSS width/height parameters. You can
  * easily adjust it from there.
- * 
+ *
  * And for reference, you want to tinker:
  * http://code.google.com/apis/maps/documentation/v3/basics.html
  */
-//print_r($EFASS); 
+//print_r($EFASS);
 if(isset($pirep))
 	$mapdata = $pirep;
 if(isset($schedule))
 	$mapdata = $schedule;
 ?>
 <?php
-/*	This is a small template for information about a navpoint popup 
-	
+/*	This is a small template for information about a navpoint popup
+
 	Variables available:
-	
+
 	<%=nav.title%>
 	<%=nav.name%>
 	<%=nav.freq%>
@@ -76,7 +74,7 @@ var map = new google.maps.Map(document.getElementById("routemap"), options);
 var dep_location = new google.maps.LatLng(<?php echo $mapdata->deplat?>,<?php echo $mapdata->deplng;?>);
 var arr_location = new google.maps.LatLng(<?php echo $mapdata->arrlat?>,<?php echo $mapdata->arrlng;?>);
 
-var bounds = new google.maps.LatLngBounds();                                                                                                     
+var bounds = new google.maps.LatLngBounds();
 bounds.extend(dep_location);
 bounds.extend(arr_location);
 
@@ -91,14 +89,14 @@ var depMarker = new google.maps.Marker({
 if(is_array($mapdata->route_details))
 {
 	$list = array();
-	
+
 	foreach($mapdata->route_details as $route)
 	{
 		if($route->type == NAV_VOR)
 			$icon = fileurl('/lib/images/icon_vor.png');
 		else
 			$icon = fileurl('/lib/images/icon_fix.png');
-		
+
 		/*	Build info array for the bubble */
 		?>
 		var v<?php echo $route->name?>_info = {
@@ -109,7 +107,7 @@ if(is_array($mapdata->route_details))
 			lat: "<?php echo $route->lat ?>",
 			lng: "<?php echo $route->lng ?>"
 		};
-		
+
 		var v<?php echo $route->name?>_navpoint_info = tmpl("navpoint_bubble", {nav: v<?php echo $route->name?>_info});
 		var v<?php echo $route->name?>_coords = new google.maps.LatLng(<?php echo $route->lat?>, <?php echo $route->lng?>);
 		var v<?php echo $route->name?>_marker = new google.maps.Marker({
@@ -119,21 +117,21 @@ if(is_array($mapdata->route_details))
 			title: "<?php echo $route->title; ?>",
 			infowindow_content: v<?php echo $route->name?>_navpoint_info
 		})
-		
+
 		bounds.extend(v<?php echo $route->name?>_coords);
-		
-		google.maps.event.addListener(v<?php echo $route->name?>_marker, 'click', function() 
+
+		google.maps.event.addListener(v<?php echo $route->name?>_marker, 'click', function()
 		{
-			info_window = new google.maps.InfoWindow({ 
+			info_window = new google.maps.InfoWindow({
 				content: this.infowindow_content,
 				position: this.position
 			});
-			
+
 			info_window.open(map, this);
 		});
-		
+
 		<?php
-			
+
 		// For the polyline
 		$list[] = "v{$route->name}_coords";
 	}
@@ -157,7 +155,7 @@ if(is_array($EFASS))
 {
 	$list2 = array();
 	$icon = fileurl('/lib/images/icon_flight.png');
-	
+
 	foreach($EFASS as $leg)
 	{
 	?>
@@ -171,11 +169,10 @@ if(is_array($EFASS))
 	bounds.extend(v<?php echo $leg->id?>_coords);
 
 	<?php
-			
+
 		// For the polyline
 		$list2[] = "v{$leg->id}_coords";
-	}	
-
+	}
 
 }
 ?>
@@ -184,9 +181,6 @@ var flightPath2 = new google.maps.Polyline({
 	strokeColor: "#00FF00", strokeOpacity: 1.0, strokeWeight: 2
 }).setMap(map);
 
-
-
-
 // Resize the view to fit it all in
-map.fitBounds(bounds); 
+map.fitBounds(bounds);
 </script>

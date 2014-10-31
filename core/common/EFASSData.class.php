@@ -13,25 +13,25 @@
  */
 
 class EFASSData extends CodonData
-{	
+{
 	public static $lasterror;
 	public static $pirepid;
-	
+
 	/*Save EFASS flight data to the table TABLE_PREFIX.'efassflightdata
 	structure:
 	1	id_rec	int(11)			Ne	Žádná	AUTO_INCREMENT
-	2	idefassflight	varchar(50)	
-	3	time	time			
-	 4	lat	varchar(15)	
-	 5	lon	varchar(15)	
-	 6	alt	varchar(6)	
-	 7	ias	int(11)	
-	 8	gs	int(11)	
-	 9	vs	varchar(8)	
+	2	idefassflight	varchar(50)
+	3	time	time
+	 4	lat	varchar(15)
+	 5	lon	varchar(15)
+	 6	alt	varchar(6)
+	 7	ias	int(11)
+	 8	gs	int(11)
+	 9	vs	varchar(8)
 	 10	galt	varchar(6)
-	 11	hdg	smallint(6)	
-	 12	qnh	smallint(4)	
-	 13	sq	smallint(4)	
+	 11	hdg	smallint(6)
+	 12	qnh	smallint(4)
+	 13	sq	smallint(4)
 	 14	stage	varchar(255)
 	 15	l_ldg	tinyint(1)
 	 16	l_str	tinyint(1)
@@ -39,10 +39,9 @@ class EFASSData extends CodonData
 	 18	l_nav	tinyint(1)
 	 19	l_gnd	tinyint(1)
 	 20	l_log	tinyint(1)
-	 
-	 
+
 	 */
-	 
+
 	 public static function SaveEfassFD($edata)
 	 {
 	 Debug::log(print_r($edata, true), 'efass');
@@ -62,42 +61,42 @@ class EFASSData extends CodonData
 	 {
 		$temp['ias'] = $temp['ias'] * 1.852;
 		$temp['gspeed'] = $temp['gspeed'] * 1.852;
-		
+
 	 }
-	 
-	 $sql = "INSERT INTO ".TABLE_PREFIX."efassflightdata(	
-							`idefassflight`, 
-							`time`, 
-							`lat`, 
-							`lon`, 
-							`alt`, 
+
+	 $sql = "INSERT INTO ".TABLE_PREFIX."efassflightdata(
+							`idefassflight`,
+							`time`,
+							`lat`,
+							`lon`,
+							`alt`,
 							`ias`,
 							`gs`,
 							`vs`,
 							`galt`,
-							`hdg`, 
+							`hdg`,
 							`qnh`,
 							`sq`,
-							`stage`, 
-							`l_ldg`, 
+							`stage`,
+							`l_ldg`,
 							`l_str`,
 							`l_bea`,
 							`l_nav`,
 							`l_gnd`,
 							`l_log`)
-					VALUES ( '{$edata['efass_uniqueflightid']}', 
-							NOW(), 
-							'{$edata['efass_lat']}', 
-							'{$edata['efass_lon']}', 
-							'{$temp['alt']}', 
+					VALUES ( '{$edata['efass_uniqueflightid']}',
+							NOW(),
+							'{$edata['efass_lat']}',
+							'{$edata['efass_lon']}',
+							'{$temp['alt']}',
 							{$temp['ias']},
 							{$temp['gspeed']},
 							'{$edata['efass_vs']}',
-							'{$temp['galt']}', 
-							{$edata['efass_hdg']}, 
+							'{$temp['galt']}',
+							{$edata['efass_hdg']},
 							{$edata['efass_pressuresetting']},
 							{$edata['efass_transponder']},
-							'{$edata['efass_flightstage']}', 
+							'{$edata['efass_flightstage']}',
 							{$edata['efass_landinglights']},
 							{$edata['efass_strobelights']},
 							{$edata['efass_beaconlights']},
@@ -110,42 +109,42 @@ class EFASSData extends CodonData
 		Debug::log($ret, 'efass');
 		return $ret;
 	}
-	
-	public static function PreparePIREPData($pilotid,$edata)	
+
+	public static function PreparePIREPData($pilotid,$edata)
 	{
-		Debug::log(print_r($edata, true), 'efass');		
-		
+		Debug::log(print_r($edata, true), 'efass');
+
 		$flightinfo = SchedulesData::getProperFlightNum($edata['efass_flightnumber']);
 		$code = $flightinfo['code'];
 		$flightnum = $flightinfo['flightnum'];
-		
+
 		#  If not, add them.
 		$depicao = $edata['efass_origin'];
 		$arricao = $edata['efass_destination'];
-		
+
 		if(!OperationsData::GetAirportInfo($depicao))
 		{
 			OperationsData::RetrieveAirportInfo($depicao);
 		}
-		
+
 		if(!OperationsData::GetAirportInfo($arricao))
 		{
 			OperationsData::RetrieveAirportInfo($arricao);
 		}
-		
+
 		# Get aircraft information
 		$reg = trim($edata['efass_registration']);
 		$ac = OperationsData::GetAircraftByReg($reg);
-		
+
 		# Load info
 		/* If no passengers set, then set it to the cargo */
 		$load = $edata['efass_pob'];
 		if($load == 0)
 			$load = $edata['efass_cargo'];
-		
-		# Convert the time to xx.xx 
+
+		# Convert the time to xx.xx
 		$flighttime = gmdate("H:i",$edata['efass_t_onblock']-$edata['efass_t_offblock']);
-		
+
 		/* Fuel conversion - EFASS reports in kg */
 		$fuelused = $edata['efass_plannedfuel'];
 		#Convert to liters
@@ -164,9 +163,9 @@ class EFASSData extends CodonData
 		{
 			$fuelused = $fuelused / .45359237;
 		}
-		
+
 		$acars_data = ACARSData::get_flight_by_pilot($pilotid);
-		
+
 		$data = array(
 			'pilotid'=>$pilotid,
 			'code'=>$code,
@@ -186,41 +185,41 @@ class EFASSData extends CodonData
 			'efass_uniqueflightid'=>$edata['efass_uniqueflightid'],
 			'log'=> 'Manual pirep from EFASS'
 		);
-				
+
 		Debug::log(print_r($data, true), 'efass');
-		
+
 		$ret = ACARSData::FilePIREP($pilotid, $data);
-				
+
 		return $ret;
 	}
 	public static function getFlightData($pirepid)
-	{	
-		$sql = 'SELECT id_rec AS id,time,lat,lon,alt,ias,gs,vs,galt,hdg,qnh,sq,stage,l_ldg,l_str,l_bea,l_nav,l_gnd,l_log 
-			FROM '.TABLE_PREFIX.'efassflightdata fd JOIN '.TABLE_PREFIX.'pirepvalues pv ON fd.idefassflight=pv.value 
+	{
+		$sql = 'SELECT id_rec AS id,time,lat,lon,alt,ias,gs,vs,galt,hdg,qnh,sq,stage,l_ldg,l_str,l_bea,l_nav,l_gnd,l_log
+			FROM '.TABLE_PREFIX.'efassflightdata fd JOIN '.TABLE_PREFIX.'pirepvalues pv ON fd.idefassflight=pv.value
 				AND pv.pirepid='.intval($pirepid).' ORDER BY time asc';
 
-		return DB::get_results($sql);	
-	}	
+		return DB::get_results($sql);
+	}
 
 	public static function getAltitudeprofile($pirepid)
 	{
 		$format = '%T';
-		$sql = "SELECT ' ' AS ym,galt AS total 
-			FROM ".TABLE_PREFIX."efassflightdata fd JOIN ".TABLE_PREFIX."pirepvalues pv ON fd.idefassflight=pv.value 
+		$sql = "SELECT ' ' AS ym,galt AS total
+			FROM ".TABLE_PREFIX."efassflightdata fd JOIN ".TABLE_PREFIX."pirepvalues pv ON fd.idefassflight=pv.value
 				AND pv.pirepid=".intval($pirepid)." ORDER BY time asc";
 		$result = DB::get_results($sql);
-		return $result;	
-	
+		return $result;
+
 	}
-	
+
 	public static function getSpeedprofile($pirepid)
 	{
 		$format = '%T';
-		$sql = "SELECT ' ' AS ym,gs AS total 
-			FROM ".TABLE_PREFIX."efassflightdata fd JOIN ".TABLE_PREFIX."pirepvalues pv ON fd.idefassflight=pv.value 
+		$sql = "SELECT ' ' AS ym,gs AS total
+			FROM ".TABLE_PREFIX."efassflightdata fd JOIN ".TABLE_PREFIX."pirepvalues pv ON fd.idefassflight=pv.value
 				AND pv.pirepid=".intval($pirepid)." ORDER BY time asc";
 		$result = DB::get_results($sql);
-		return $result;	
-	
-	}	
+		return $result;
+
+	}
 }
